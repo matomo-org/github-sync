@@ -3,8 +3,6 @@
 namespace Piwik\GithubSync;
 
 use ArrayComparator\ArrayComparator;
-use Github\Client;
-use Github\Exception\RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,21 +13,9 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 class SyncCommand extends Command
 {
     /**
-     * @var Client
+     * @var Github
      */
     private $github;
-
-    /**
-     * @var bool
-     */
-    private $authenticated = false;
-
-    public function __construct()
-    {
-        $this->github = new Client();
-
-        parent::__construct();
-    }
 
     protected function configure()
     {
@@ -59,15 +45,12 @@ class SyncCommand extends Command
     {
         $from = $input->getArgument('from');
         $to = $input->getArgument('to');
-        $token = $input->getOption('token');
-        if ($token) {
-            $this->authenticate($token);
-        }
+        $this->github = new Github($input->getOption('token'));
 
         $output->writeln(sprintf('<comment>Synchronizing labels from %s to %s</comment>', $from, $to));
 
-        $fromLabels = $this->getLabels($from);
-        $toLabels = $this->getLabels($to);
+        $fromLabels = $this->github->getLabels($from);
+        $toLabels = $this->github->getLabels($to);
 
         $comparator = new ArrayComparator();
 
@@ -108,30 +91,14 @@ class SyncCommand extends Command
         $output->writeln('<comment>Finished</comment>');
     }
 
-    private function getLabels($repository)
-    {
-        $array = explode('/', $repository, 2);
-
-        try {
-            return $this->github->issue()->labels()->all($array[0], $array[1]);
-        } catch (RuntimeException $e) {
-            throw new \RuntimeException('Error getting labels from repository ' . $repository, 0, $e);
-        }
-    }
-
     private function createLabel(OutputInterface $output, $repository, $name, $color)
     {
-        $array = explode('/', $repository, 2);
-
-        if (!$this->authenticated) {
+        if (! $this->github->isAuthenticated()) {
             $output->writeln('<error>Impossible because you are not authenticated. You need to provide a personal access token using the "--token" option. Create a token at https://github.com/settings/applications</error>');
             return;
         }
 
-        $this->github->issue()->labels()->create($array[0], $array[1], [
-            'name' => $name,
-            'color' => $color,
-        ]);
+        $this->github->createLabel($repository, $name, $color);
 
         $output->writeln('<info>Label created</info>');
     }
@@ -141,11 +108,5 @@ class SyncCommand extends Command
         $helper = $this->getHelper('question');
         $question = new ConfirmationQuestion('<question>' . $message . '</question>', true);
         return $helper->ask($input, $output, $question);
-    }
-
-    private function authenticate($token)
-    {
-        $this->github->authenticate($token, null, Client::AUTH_HTTP_TOKEN);
-        $this->authenticated = true;
     }
 }
