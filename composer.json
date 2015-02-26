@@ -1,0 +1,16 @@
+{
+    "name": "piwik/github-sync",
+    "type": "project",
+    "license": "LGPL-3.0",
+    "autoload": {
+        "psr-4": {
+            "Piwik\\GithubSync\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4",
+        "symfony/console": "~2.6",
+        "knplabs/github-api": "~1.4",
+        "myclabs/array-comparator": "~1.1"
+    }
+}
