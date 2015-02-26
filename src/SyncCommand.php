@@ -27,7 +27,7 @@ class SyncCommand extends Command
             )
             ->addArgument(
                 'to',
-                InputArgument::REQUIRED,
+                InputArgument::REQUIRED | InputArgument::IS_ARRAY,
                 'The repository to synchronize'
             )
             ->addOption(
@@ -42,13 +42,18 @@ class SyncCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $from = $input->getArgument('from');
-        $to = $input->getArgument('to');
+        $targetList = $input->getArgument('to');
         $this->github = new Github($input->getOption('token'));
 
-        $output->writeln(sprintf('<comment>Synchronizing labels from %s to %s</comment>', $from, $to));
-
         $labelSynchronizer = new LabelSynchronizer($this->github, $input, $output);
-        $labelSynchronizer->synchronize($from, $to);
+
+        foreach ($targetList as $to) {
+            $output->writeln(sprintf('<comment>Synchronizing labels from %s to %s</comment>', $from, $to));
+
+            $labelSynchronizer->synchronize($from, $to);
+
+            $output->writeln('');
+        }
 
         $output->writeln('<comment>Finished</comment>');
     }

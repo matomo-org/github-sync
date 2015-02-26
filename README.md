@@ -29,6 +29,16 @@ The script will ask you before doing any modification so don't be afraid to run 
 
 You can provide a GitHub *Personal Access Token* using the `--token` option. This is necessary if you want to create/delete/update labels. If you just want to try out the script without doing any modification, you don't need to provide a token.
 
+### Bulk synchronizing
+
+You can synchronize multiple repositories:
+
+```
+./github-sync.php sync piwik/piwik piwik/plugin-SiteMigration piwik/plugin-TasksTimetable
+```
+
+Here the `plugin-SiteMigration` and `plugin-TasksTimetable` repositories will both be synchronized to `piwik/piwik`.
+
 ## License
 
 This tool is released under the LGPL v3.0.
