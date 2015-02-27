@@ -30,7 +30,7 @@ Here is an example of the full command line:
 
 The script will ask you before doing any modification so don't be afraid to run it to see if it works.
 
-You can provide a GitHub *Personal Access Token* using the `--token` option. This is necessary if you want to create/delete/update labels. If you just want to try out the script without doing any modification, you don't need to provide a token.
+You can provide a GitHub *Personal Access Token* using the `--token` option. This is necessary if you want to create/delete/update labels and milestones. If you just want to try out the script without doing any modification, you don't need to provide a token.
 
 ### Bulk synchronizing
 

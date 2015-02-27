@@ -71,12 +71,15 @@ class SyncCommand extends Command
         $targetList = $input->getArgument('to');
 
         $labelSynchronizer = new LabelSynchronizer($this->github, $input, $output);
+        $milestoneSynchronizer = new MilestoneSynchronizer($this->github, $input, $output);
 
         foreach ($targetList as $to) {
             $output->writeln(sprintf('<comment>Synchronizing labels from %s to %s</comment>', $from, $to));
-
             $labelSynchronizer->synchronize($from, $to);
+            $output->writeln('');
 
+            $output->writeln(sprintf('<comment>Synchronizing milestones from %s to %s</comment>', $from, $to));
+            $milestoneSynchronizer->synchronize($from, $to);
             $output->writeln('');
         }
 

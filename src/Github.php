@@ -96,6 +96,38 @@ class Github
         $this->github->issue()->labels()->update($array[0], $array[1], $name, $newName, $color);
     }
 
+    public function getMilestones($repository)
+    {
+        $array = explode('/', $repository, 2);
+
+        try {
+            return $this->github->issue()->milestones()->all($array[0], $array[1]);
+        } catch (RuntimeException $e) {
+            throw new \RuntimeException('Error getting milestones from repository ' . $repository, 0, $e);
+        }
+    }
+
+    public function createMilestone($repository, $title, $state)
+    {
+        $this->assertAuthenticated();
+
+        $array = explode('/', $repository, 2);
+
+        return $this->github->issue()->milestones()->create($array[0], $array[1], [
+            'title' => $title,
+            'state' => $state,
+        ]);
+    }
+
+    public function deleteMilestone($repository, $number)
+    {
+        $this->assertAuthenticated();
+
+        $array = explode('/', $repository, 2);
+
+        $this->github->issue()->milestones()->remove($array[0], $array[1], $number);
+    }
+
     private function authenticate($token)
     {
         $this->github->authenticate($token, null, Client::AUTH_HTTP_TOKEN);
