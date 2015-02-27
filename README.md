@@ -8,6 +8,7 @@ Clone the repository and install composer dependencies:
 
 ```
 git clone https://github.com/piwik/github-sync
+cd github-sync
 composer install
 ```
 
