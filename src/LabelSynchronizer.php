@@ -53,10 +53,17 @@ class LabelSynchronizer
 
         $comparator
             ->whenDifferent(function ($label1, $label2) use ($to) {
-                $this->output->writeln(sprintf('Same label but different colors for <info>%s</info>', $label1['name']));
+                $this->output->writeln(sprintf(
+                    'Same label but different name/color for <info>%s</info> (%s -> %s, %s -> %s)',
+                    $label1['name'],
+                    $label1['name'],
+                    $label2['name'],
+                    $label1['color'],
+                    $label2['color']
+                ));
 
-                if ($this->confirm('Do you want to change the color of the label?')) {
-                    $this->output->writeln('<error>Not implemented yet</error>');
+                if ($this->confirm('Do you want to update the name and color of the label?')) {
+                    $this->updateLabel($to, $label2['name'], $label1['name'], $label1['color']);
                 }
             })
             ->whenMissingRight(function ($label) use ($to) {
@@ -70,7 +77,7 @@ class LabelSynchronizer
                 $this->output->writeln(sprintf('Extra label <info>%s</info> in %s', $label['name'], $to));
 
                 if ($this->confirm('Do you want to <fg=red>delete</fg=red> this extra label?')) {
-                    $this->output->writeln('<error>Not implemented yet</error>');
+                    $this->deleteLabel($to, $label['name']);
                 }
             });
 
@@ -83,6 +90,30 @@ class LabelSynchronizer
             $this->github->createLabel($repository, $name, $color);
 
             $this->output->writeln('<info>Label created</info>');
+        } catch (AuthenticationRequiredException $e) {
+            // We show the error but don't stop the app
+            $this->output->writeln(sprintf('<error>Skipped: %s</error>', $e->getMessage()));
+        }
+    }
+
+    private function deleteLabel($repository, $name)
+    {
+        try {
+            $this->github->deleteLabel($repository, $name);
+
+            $this->output->writeln('<info>Label deleted</info>');
+        } catch (AuthenticationRequiredException $e) {
+            // We show the error but don't stop the app
+            $this->output->writeln(sprintf('<error>Skipped: %s</error>', $e->getMessage()));
+        }
+    }
+
+    private function updateLabel($repository, $name, $newName, $color)
+    {
+        try {
+            $this->github->updateLabel($repository, $name, $newName, $color);
+
+            $this->output->writeln('<info>Label updated</info>');
         } catch (AuthenticationRequiredException $e) {
             // We show the error but don't stop the app
             $this->output->writeln(sprintf('<error>Skipped: %s</error>', $e->getMessage()));

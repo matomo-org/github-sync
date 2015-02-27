@@ -78,6 +78,24 @@ class Github
         ]);
     }
 
+    public function deleteLabel($repository, $name)
+    {
+        $this->assertAuthenticated();
+
+        $array = explode('/', $repository, 2);
+
+        $this->github->issue()->labels()->deleteLabel($array[0], $array[1], $name);
+    }
+
+    public function updateLabel($repository, $name, $newName, $color)
+    {
+        $this->assertAuthenticated();
+
+        $array = explode('/', $repository, 2);
+
+        $this->github->issue()->labels()->update($array[0], $array[1], $name, $newName, $color);
+    }
+
     private function authenticate($token)
     {
         $this->github->authenticate($token, null, Client::AUTH_HTTP_TOKEN);
