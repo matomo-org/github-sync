@@ -48,7 +48,7 @@ Additionally, you can use the `*` wildcard to synchronize with all you repositor
 ./github-sync.php sync piwik/piwik "piwik/*"
 ```
 
-*Note: `*` can be interpreted by your shell, in that case use quotes as shown in the example above.*
+_Note: `*` can be interpreted by your shell, in that case use quotes as shown in the example above._
 
 ## License
 
