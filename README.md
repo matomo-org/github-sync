@@ -39,6 +39,14 @@ You can synchronize multiple repositories:
 
 Here the `plugin-SiteMigration` and `plugin-TasksTimetable` repositories will both be synchronized to `piwik/piwik`.
 
+Additionally, you can use the `*` wildcard to synchronize with all you repositories matching the pattern:
+
+```
+./github-sync.php sync piwik/piwik "piwik/*"
+```
+
+*Note: `*` can be interpreted by your shell, in that case use quotes as shown in the example above.*
+
 ## License
 
 This tool is released under the LGPL v3.0.

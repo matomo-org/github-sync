@@ -39,11 +39,36 @@ class SyncCommand extends Command
         ;
     }
 
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        $this->github = new Github($input->getOption('token'));
+
+        $to = $input->getArgument('to');
+
+        if (count($to) != 1) {
+            return;
+        }
+        $to = reset($to);
+
+        if (strpos($to, '*') !== false) {
+            try {
+                $repositories = $this->github->getUserRepositoriesMatching($to);
+            } catch (AuthenticationRequiredException $e) {
+                $output->writeln('<error>Using wildcards requires to be authenticated.</error>');
+                $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+                exit;
+            }
+            $input->setArgument('to', $repositories);
+
+            $output->writeln(sprintf('<info>Synchronizing %d repositories</info>', count($repositories)));
+            $output->writeln('');
+        }
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $from = $input->getArgument('from');
         $targetList = $input->getArgument('to');
-        $this->github = new Github($input->getOption('token'));
 
         $labelSynchronizer = new LabelSynchronizer($this->github, $input, $output);
 

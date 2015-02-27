@@ -79,14 +79,14 @@ class LabelSynchronizer
 
     private function createLabel($repository, $name, $color)
     {
-        if (! $this->github->isAuthenticated()) {
-            $this->output->writeln('<error>Impossible because you are not authenticated. You need to provide a personal access token using the "--token" option. Create a token at https://github.com/settings/applications</error>');
-            return;
+        try {
+            $this->github->createLabel($repository, $name, $color);
+
+            $this->output->writeln('<info>Label created</info>');
+        } catch (AuthenticationRequiredException $e) {
+            // We show the error but don't stop the app
+            $this->output->writeln(sprintf('<error>Skipped: %s</error>', $e->getMessage()));
         }
-
-        $this->github->createLabel($repository, $name, $color);
-
-        $this->output->writeln('<info>Label created</info>');
     }
 
     private function confirm($message)
