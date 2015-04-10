@@ -10,7 +10,7 @@
     "require": {
         "php": ">=5.4",
         "symfony/console": "~2.6",
-        "knplabs/github-api": "dev-label-api@dev",
+        "knplabs/github-api": "~1.4.7",
         "myclabs/array-comparator": "~1.1"
     },
     "repositories": [
