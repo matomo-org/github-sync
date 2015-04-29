@@ -12,6 +12,8 @@ cd github-sync
 composer install
 ```
 
+If you do not have composer installed, it is explained [here](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx). If you installed composer locally (in the directory) you can alternatively run `php composer.phar install`.
+
 ## Usage
 
 Simply run the `github-sync.php` script to see how to use the command:
