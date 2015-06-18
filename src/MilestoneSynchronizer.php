@@ -3,37 +3,12 @@
 namespace Piwik\GithubSync;
 
 use ArrayComparator\ArrayComparator;
-use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Synchronizes milestones.
  */
-class MilestoneSynchronizer
+class MilestoneSynchronizer extends AbstractSynchronizer
 {
-    /**
-     * @var Github
-     */
-    private $github;
-
-    /**
-     * @var InputInterface
-     */
-    private $input;
-
-    /**
-     * @var OutputInterface
-     */
-    private $output;
-
-    public function __construct(Github $github, InputInterface $input, OutputInterface $output)
-    {
-        $this->github = $github;
-        $this->input = $input;
-        $this->output = $output;
-    }
 
     public function synchronize($from, $to)
     {
@@ -88,12 +63,5 @@ class MilestoneSynchronizer
             // We show the error but don't stop the app
             $this->output->writeln(sprintf('<error>Skipped: %s</error>', $e->getMessage()));
         }
-    }
-
-    private function confirm($message)
-    {
-        $helper = new QuestionHelper();
-        $question = new ConfirmationQuestion('<question>' . $message . '</question>', true);
-        return $helper->ask($this->input, $this->output, $question);
     }
 }
