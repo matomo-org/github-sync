@@ -36,6 +36,12 @@ class SyncCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'The GitHub token to use for authentication. Required if you want to create/updated/delete.'
             )
+            ->addOption(
+                'force',
+                null,
+                InputOption::VALUE_NONE,
+                'Directly update each label and milestone without prompting the user.'
+            )
         ;
     }
 
@@ -69,6 +75,8 @@ class SyncCommand extends Command
     {
         $from = $input->getArgument('from');
         $targetList = $input->getArgument('to');
+
+        $input->setInteractive(! $input->getOption('force'));
 
         $labelSynchronizer = new LabelSynchronizer($this->github, $input, $output);
         $milestoneSynchronizer = new MilestoneSynchronizer($this->github, $input, $output);
