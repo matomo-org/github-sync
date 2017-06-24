@@ -42,6 +42,18 @@ class SyncCommand extends Command
                 InputOption::VALUE_NONE,
                 'Directly update each label and milestone without prompting the user.'
             )
+            ->addOption(
+                'skip-labels',
+                null,
+                InputOption::VALUE_NONE,
+                'Do NOT sync labels'
+            )
+            ->addOption(
+                'skip-milestones',
+                null,
+                InputOption::VALUE_NONE,
+                'Do NOT sync milestones'
+            )
         ;
     }
 
@@ -78,17 +90,23 @@ class SyncCommand extends Command
 
         $input->setInteractive(! $input->getOption('force'));
 
+        $skipLabels = $input->getOption('skip-labels');
+        $skipMilestones = $input->getOption('skip-milestones');
+
         $labelSynchronizer = new LabelSynchronizer($this->github, $input, $output);
         $milestoneSynchronizer = new MilestoneSynchronizer($this->github, $input, $output);
 
         foreach ($targetList as $to) {
-            $output->writeln(sprintf('<comment>Synchronizing labels from %s to %s</comment>', $from, $to));
-            $labelSynchronizer->synchronize($from, $to);
-            $output->writeln('');
-
-            $output->writeln(sprintf('<comment>Synchronizing milestones from %s to %s</comment>', $from, $to));
-            $milestoneSynchronizer->synchronize($from, $to);
-            $output->writeln('');
+            if (! $skipLabels) {
+                $output->writeln(sprintf('<comment>Synchronizing labels from %s to %s</comment>', $from, $to));
+                $labelSynchronizer->synchronize($from, $to);
+                $output->writeln('');
+            }
+            if (! $skipMilestones) {
+                $output->writeln(sprintf('<comment>Synchronizing milestones from %s to %s</comment>', $from, $to));
+                $milestoneSynchronizer->synchronize($from, $to);
+                $output->writeln('');
+            }
         }
 
         $output->writeln('<comment>Finished</comment>');
