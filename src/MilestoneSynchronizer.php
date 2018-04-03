@@ -3,6 +3,7 @@
 namespace Piwik\GithubSync;
 
 use ArrayComparator\ArrayComparator;
+use Github\Exception\RuntimeException;
 
 /**
  * Synchronizes milestones.
@@ -47,7 +48,7 @@ class MilestoneSynchronizer extends AbstractSynchronizer
             $this->github->createMilestone($repository, $title, $state);
 
             $this->output->writeln('<info>Milestone created</info>');
-        } catch (AuthenticationRequiredException $e) {
+        } catch (RuntimeException $e) {
             // We show the error but don't stop the app
             $this->output->writeln(sprintf('<error>Skipped: %s</error>', $e->getMessage()));
         }
@@ -59,7 +60,7 @@ class MilestoneSynchronizer extends AbstractSynchronizer
             $this->github->deleteMilestone($repository, $milestone['number']);
 
             $this->output->writeln('<info>Milestone deleted</info>');
-        } catch (AuthenticationRequiredException $e) {
+        } catch (RuntimeException $e) {
             // We show the error but don't stop the app
             $this->output->writeln(sprintf('<error>Skipped: %s</error>', $e->getMessage()));
         }
