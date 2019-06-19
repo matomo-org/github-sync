@@ -7,7 +7,7 @@ This script lets you synchronize labels and milestones between different GitHub 
 Clone the repository and install composer dependencies:
 
 ```
-git clone https://github.com/piwik/github-sync
+git clone https://github.com/matomo-org/github-sync
 cd github-sync
 composer install
 ```
@@ -25,7 +25,7 @@ Simply run the `github-sync.php` script to see how to use the command:
 Here is an example of the full command line:
 
 ```
-./github-sync.php sync piwik/piwik piwik/plugin-SiteMigration --token=12345abcd
+./github-sync.php sync matomo-org/matomo matomo-org/plugin-CustomAlerts --token=12345abcd
 ```
 
 ![](screenshot.png)
@@ -39,15 +39,15 @@ You can provide a GitHub *Personal Access Token* using the `--token` option. Thi
 You can synchronize multiple repositories:
 
 ```
-./github-sync.php sync piwik/piwik piwik/plugin-SiteMigration piwik/plugin-TasksTimetable
+./github-sync.php sync matomo-org/matomo matomo-org/plugin-CustomAlerts matomo-org/plugin-SecurityInfo
 ```
 
-Here the `plugin-SiteMigration` and `plugin-TasksTimetable` repositories will both be synchronized to `piwik/piwik`.
+Here the `plugin-SiteMigration` and `plugin-TasksTimetable` repositories will both be synchronized to `matomo-org/matomo`.
 
 Additionally, you can use the `*` wildcard to synchronize with all you repositories matching the pattern:
 
 ```
-./github-sync.php sync piwik/piwik "piwik/*"
+./github-sync.php sync matomo-org/matomo "matomo-org/*"
 ```
 
 _Note: `*` can be interpreted by your shell, in that case use quotes as shown in the example above._
