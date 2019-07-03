@@ -3,6 +3,7 @@
 namespace Piwik\GithubSync;
 
 use ArrayComparator\ArrayComparator;
+use Github\Exception\RuntimeException;
 
 /**
  * Synchronizes labels.
@@ -64,7 +65,7 @@ class LabelSynchronizer extends AbstractSynchronizer
             $this->github->createLabel($repository, $name, $color);
 
             $this->output->writeln('<info>Label created</info>');
-        } catch (AuthenticationRequiredException $e) {
+        } catch (RuntimeException $e) {
             // We show the error but don't stop the app
             $this->output->writeln(sprintf('<error>Skipped: %s</error>', $e->getMessage()));
         }
@@ -76,7 +77,7 @@ class LabelSynchronizer extends AbstractSynchronizer
             $this->github->deleteLabel($repository, $name);
 
             $this->output->writeln('<info>Label deleted</info>');
-        } catch (AuthenticationRequiredException $e) {
+        } catch (RuntimeException $e) {
             // We show the error but don't stop the app
             $this->output->writeln(sprintf('<error>Skipped: %s</error>', $e->getMessage()));
         }
@@ -88,7 +89,7 @@ class LabelSynchronizer extends AbstractSynchronizer
             $this->github->updateLabel($repository, $name, $newName, $color);
 
             $this->output->writeln('<info>Label updated</info>');
-        } catch (AuthenticationRequiredException $e) {
+        } catch (RuntimeException $e) {
             // We show the error but don't stop the app
             $this->output->writeln(sprintf('<error>Skipped: %s</error>', $e->getMessage()));
         }
